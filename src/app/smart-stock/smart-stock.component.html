@@ -1,0 +1,30 @@
+<div class="side-nav">
+  <div class="logo">
+    <h4>Smart Stock</h4>
+  </div>
+  <ul class="list-group list-group-flush cursor-pointer">
+    <li class="list-group-item" (click)="isCollapsedUser = !isCollapsedUser" [attr.aria-expanded]="!isCollapsed" aria-controls="users">Utilisateurs</li>
+    <div id="users" [ngbCollapse]="isCollapsedUser">
+      <a [routerLink]="['/dashboard/newAccount']" >
+        <li class="list-group-item subs" >Ajouter un utilisateur </li>
+      </a>
+      <a [routerLink]="['/dashboard/listAccounts']" >
+        <li class="list-group-item subs">Liste des utilisateurs</li>
+      </a>
+    </div>
+    <li class="list-group-item" (click)="isCollapsedOrder = !isCollapsedOrder" [attr.aria-expanded]="!isCollapsed" aria-controls="orders">Commandes</li>
+    <div id="orders" [ngbCollapse]="isCollapsedOrder">
+      <li class="list-group-item subs" >Nouvelle achat</li>
+      <li class="list-group-item subs">Nouveau vente</li>
+      <li class="list-group-item subs">Liste des commandes</li>
+
+    </div>
+
+  </ul>
+</div>
+<div class="top-bar"></div>
+<div class="inside-content">
+  <div class="container-fluid">
+    <router-outlet></router-outlet>
+  </div>
+</div>

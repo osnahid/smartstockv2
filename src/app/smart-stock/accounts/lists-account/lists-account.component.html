@@ -1,0 +1,32 @@
+<div class="section-title">
+  <h4> Liste des utilisateurs</h4>
+</div>
+<div class="container">
+  <div class="row">
+    <table class="table table-striped">
+      <thead>
+      <tr>
+        <th scope="col">#</th>
+        <th scope="col">Nom Complet</th>
+        <th scope="col">Adresse</th>
+        <th scope="col">Telephone</th>
+        <th scope="col">Email</th>
+        <th scope="col">Action</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr *ngFor="let account of accounts">
+        <th scope="row">{{account.id}}</th>
+        <td>{{account.name}}</td>
+        <td>{{account.address}}</td>
+        <td>{{account.phone}}</td>
+        <td>{{account.email}}</td>
+        <td>
+          <button class="btn btn-danger" (click)="deleteSingleAccount(account.uuid)"  style="margin-right: 15px">Supprimer</button>
+          <button class="btn btn-info">Détails</button>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

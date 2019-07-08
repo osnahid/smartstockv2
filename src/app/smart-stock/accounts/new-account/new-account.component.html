@@ -1,0 +1,57 @@
+<div class="section-title">
+  <h4> Ajouter un nouveau compte</h4>
+</div>
+<div class="container">
+ <div class="row">
+   <div class="col-md-12">
+     <form class="row" #f="ngForm" (ngSubmit)="addAccount(f)">
+       <div class="form-group col-md-6">
+         <label for="Name">Nom</label>
+         <input type="text" class="form-control" ngModel name="Name" [(ngModel)]="name" id="Name"  placeholder="Saisir le nom complet">
+       </div>
+       <div class="form-group col-md-6">
+         <label >Email</label>
+         <input type="email" class="form-control" ngModel name="email" [(ngModel)]="email"   placeholder="Saisir l'email">
+       </div>
+       <div class="form-group col-md-6">
+         <label for="tel">Telephone</label>
+         <input type="tel" class="form-control" ngModel name="tel" [(ngModel)]="tel" id="tel"  placeholder="Saisir le numero de telephone">
+       </div>
+       <div class="form-group col-md-6">
+         <label for="adresse">Adresse</label>
+         <input type="text" class="form-control" ngModel name="adresse" [(ngModel)]="address" id="adresse"  placeholder="Saisir l'adresse">
+       </div>
+       <div class="form-group col-md-6">
+         <label for="ville">Ville</label>
+         <input type="text" class="form-control" ngModel name="ville" [(ngModel)]="ville" id="ville"  placeholder="Saisir la ville">
+       </div>
+       <div class="form-group col-md-6">
+         <label for="zip">Code postal</label>
+         <input type="text" class="form-control" ngModel name="zip" [(ngModel)]="zipcode" id="zip"  placeholder="Saisir le code postal">
+       </div>
+       <div class="form-group col-md-6">
+         <label for="ice">ICE</label>
+         <input type="text" class="form-control" ngModel name="ice" [(ngModel)]="ice" id="ice"  placeholder="Saisir l'ICE">
+       </div>
+       <div class="form-group col-md-6">
+         <label for="rc">RC</label>
+         <input type="text" class="form-control" ngModel name="rc" [(ngModel)]="rc" id="rc"  placeholder="Saisir l'RC">
+       </div>
+       <div class="form-group col-md-6">
+         <label for="if">IF</label>
+         <input type="text" class="form-control" ngModel name="if" [(ngModel)]="iff" id="if"  placeholder="Saisir l'IF">
+       </div>
+       <div class="form-group col-md-6">
+         <label for="exampleFormControlSelect1">Client/Fournisseur</label>
+         <select class="form-control" id="exampleFormControlSelect1" name="clientFournisseur" [(ngModel)]="clientFounisseur">
+           <option selected>client</option>
+           <option>fournisseur</option>
+         </select>
+       </div>
+       <div class="col-md-12 text-right">
+         <button type="submit" class="btn btn-primary">Ajouter</button>
+       </div>
+     </form>
+   </div>
+ </div>
+</div>

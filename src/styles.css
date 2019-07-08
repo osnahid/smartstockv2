@@ -1,1 +1,22 @@
 /* You can add global styles to this file, and also import other style files */
+@import url('https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,600,700&display=swap');
+* {
+  font-family: 'Source Sans Pro';
+}
+
+
+.container-fluid {
+  padding:0px !important;
+}
+
+
+.section-title{
+  height: 100px;
+  width: 100%;
+  background: #17A1F3;
+  padding-top: 30px;
+  text-align: center;
+  border-top-left-radius:26px ;
+  color: white;
+  margin-bottom: 20px;
+}
