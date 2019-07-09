@@ -1,0 +1,50 @@
+<div class="section-title">
+  <h4> Nouvelle Commande</h4>
+</div>
+<div class="container">
+
+  <div class="row" *ngFor="let categorie of categories">
+    <div class="card bg-warning" style="width: 18rem;">
+      <div class="card-body">
+        <h5 class="card-title text-center bolder-me ">{{categorie.name}}</h5>
+        <div class="text-center">
+          <a class="btn btn-primary text-white" (click)="getItemsByCategorie(categorie.uuid)">Voir les produits</a>
+        </div>
+      </div>
+    </div>
+  </div>
+  <br>
+  <div class="row">
+    <div  *ngFor="let item of items" (click)="open(content)"  class="card bg-info col-md-2 cursor-pointer" style="margin: 5px">
+      <div class="card-body ">
+        <h5 class="card-title text-center text-white bolder-me ">{{item.name}}</h5>
+      </div>
+    </div>
+  </div>
+
+  <ng-template #content let-modal>
+    <div class="modal-body">
+      <form class="row">
+        <div class="form-group col-md-12">
+          <label for="qte">Quantité</label>
+          <input type="number" class="form-control" id="qte"  placeholder="Saisir la quantité">
+        </div>
+        <div class="form-group col-md-6">
+          <label for="prix">Prix</label>
+          <input type="number" class="form-control" id="prix"  placeholder="Saisir le prix">
+        </div>
+        <div class="form-group col-md-6">
+          <label for="unity">Unité</label>
+          <input type="number" class="form-control" id="unity"  placeholder="Saisir l'unité de mesure">
+        </div>
+      </form>
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-success" (click)="modal.close('Save click')">Ajouter</button>
+    </div>
+  </ng-template>
+
+
+
+
+</div>

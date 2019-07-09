@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import {AccountsService} from '../../../services/accounts.service';
 import {Router} from '@angular/router';
+import Swal from "sweetalert2";
 @Component({
   selector: 'app-new-account',
   templateUrl: './new-account.component.html',
@@ -26,7 +27,7 @@ export class NewAccountComponent implements OnInit {
     let data = {
       'name' : this.name,
       'email' : this.email,
-      'tel' : this.tel,
+      'phone' : this.tel,
       'address' : this.address,
       'city': this.ville,
       'zipcode' : this.zipcode,
@@ -36,9 +37,16 @@ export class NewAccountComponent implements OnInit {
       'type' : this.clientFounisseur
 
     };
+    const Toast = Swal.mixin({
+      toast: true,
+      position: 'top-end',
+      showConfirmButton: false,
+      timer: 3000
+    });
     this.account.addNewAccount(data).subscribe(
       (resp:any) => {
         if(resp.status){
+          Toast.fire({type: 'success', title: 'Utilisateur ajouté'});
           this.router.navigate(['/dashboard/listAccounts']);
         }
       }

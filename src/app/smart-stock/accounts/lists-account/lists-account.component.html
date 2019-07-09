@@ -3,7 +3,7 @@
 </div>
 <div class="container">
   <div class="row">
-    <table class="table table-striped">
+    <table class="table table-striped table-dark">
       <thead>
       <tr>
         <th scope="col">#</th>
@@ -22,7 +22,7 @@
         <td>{{account.phone}}</td>
         <td>{{account.email}}</td>
         <td>
-          <button class="btn btn-danger" (click)="deleteSingleAccount(account.uuid)"  style="margin-right: 15px">Supprimer</button>
+          <button class="btn btn-danger" [swal]="['Suppression!', 'Vous etes sure ?', 'warning']" (confirm)="deleteSingleAccount(account.uuid)"  style="margin-right: 15px">Supprimer</button>
           <button class="btn btn-info">Détails</button>
         </td>
       </tr>

@@ -20,3 +20,13 @@
   color: white;
   margin-bottom: 20px;
 }
+
+
+.table-dark {
+  background-color: #0D1A27 !important;
+}
+
+.cursor-pointer {
+  cursor: pointer;
+}
+

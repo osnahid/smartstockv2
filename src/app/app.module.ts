@@ -13,6 +13,11 @@ import { OrdersComponent } from './smart-stock/orders/orders.component';
 import { NewAccountComponent } from './smart-stock/accounts/new-account/new-account.component';
 import { ListsAccountComponent } from './smart-stock/accounts/lists-account/lists-account.component';
 import {AccountsService} from './services/accounts.service';
+import { SweetAlert2Module } from '@sweetalert2/ngx-sweetalert2';
+import { ListOrdersComponent } from './smart-stock/orders/list-orders/list-orders.component';
+import { NewOrderComponent } from './smart-stock/orders/new-order/new-order.component';
+import {CategoriesService} from './services/categories.service';
+import {ItemsService} from './services/items.service';
 
 @NgModule({
   declarations: [
@@ -22,16 +27,21 @@ import {AccountsService} from './services/accounts.service';
     OrdersComponent,
     NewAccountComponent,
     ListsAccountComponent,
+    ListOrdersComponent,
+    NewOrderComponent,
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     NgbModule,
     FormsModule,
-    HttpClientModule
+    HttpClientModule,
+    SweetAlert2Module.forRoot()
   ],
   providers: [
-    AccountsService
+    AccountsService,
+    CategoriesService,
+    ItemsService
   ],
   bootstrap: [
     AppComponent,
