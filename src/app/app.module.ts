@@ -18,6 +18,8 @@ import { ListOrdersComponent } from './smart-stock/orders/list-orders/list-order
 import { NewOrderComponent } from './smart-stock/orders/new-order/new-order.component';
 import {CategoriesService} from './services/categories.service';
 import {ItemsService} from './services/items.service';
+import {StocksService} from './services/stocks.service';
+import {OrdersService} from './services/orders.service';
 
 @NgModule({
   declarations: [
@@ -41,7 +43,9 @@ import {ItemsService} from './services/items.service';
   providers: [
     AccountsService,
     CategoriesService,
-    ItemsService
+    ItemsService,
+    StocksService,
+    OrdersService
   ],
   bootstrap: [
     AppComponent,

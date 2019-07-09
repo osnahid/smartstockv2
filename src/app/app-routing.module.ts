@@ -6,6 +6,7 @@ import {OrdersComponent} from './smart-stock/orders/orders.component';
 import {NewAccountComponent} from './smart-stock/accounts/new-account/new-account.component';
 import {ListsAccountComponent} from './smart-stock/accounts/lists-account/lists-account.component';
 import {NewOrderComponent} from './smart-stock/orders/new-order/new-order.component';
+import {ListOrdersComponent} from './smart-stock/orders/list-orders/list-orders.component';
 
 const routes: Routes = [
   {
@@ -18,6 +19,9 @@ const routes: Routes = [
       },
       {
         path: 'newOrder' , component: NewOrderComponent
+      },
+      {
+        path: 'listOrders' , component: ListOrdersComponent
       }
   ]
   }

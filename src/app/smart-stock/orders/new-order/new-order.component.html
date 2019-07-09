@@ -2,49 +2,106 @@
   <h4> Nouvelle Commande</h4>
 </div>
 <div class="container">
-
-  <div class="row" *ngFor="let categorie of categories">
-    <div class="card bg-warning" style="width: 18rem;">
-      <div class="card-body">
-        <h5 class="card-title text-center bolder-me ">{{categorie.name}}</h5>
-        <div class="text-center">
-          <a class="btn btn-primary text-white" (click)="getItemsByCategorie(categorie.uuid)">Voir les produits</a>
-        </div>
-      </div>
-    </div>
-  </div>
-  <br>
   <div class="row">
-    <div  *ngFor="let item of items" (click)="open(content)"  class="card bg-info col-md-2 cursor-pointer" style="margin: 5px">
-      <div class="card-body ">
-        <h5 class="card-title text-center text-white bolder-me ">{{item.name}}</h5>
+    <div class="col-md-8">
+      <div class="row" *ngFor="let categorie of categories">
+        <div class="card bg-warning" style="width: 18rem;">
+          <div class="card-body">
+            <h5 class="card-title text-center bolder-me ">{{categorie.name}}</h5>
+            <div class="text-center">
+              <a class="btn btn-primary text-white" (click)="getItemsByCategorie(categorie.uuid)">Voir les produits</a>
+            </div>
+          </div>
+        </div>
+      </div>
+      <br>
+      <div class="row">
+        <div  *ngFor="let item of items" (click)="open(content)"  class="card bg-info col-md-3 cursor-pointer" style="margin: 5px">
+          <div class="card-body ">
+            <p class="card-title text-center text-white bolder-me " >{{item.name}}</p>
+          </div>
+          <ng-template #content let-modal>
+            <form >
+            <div class="modal-body">
+              <div class="row">
+                <div class="form-group col-md-12">
+                  <label for="qte">Quantité</label>
+                  <input type="number" class="form-control" name="qte" id="qte" [(ngModel)]="qte" placeholder="Saisir la quantité" required>
+                </div>
+                <div class="form-group col-md-6">
+                  <label for="prix">Prix</label>
+                  <input type="number" class="form-control" name="'prix" id="prix"  [(ngModel)]="price" placeholder="Saisir le prix"  required>
+                  <span>Prix par Default : {{item.buy_price}} </span>
+                </div>
+                <div class="form-group col-md-6">
+                  <label for="unity">Unité</label>
+                  <input type="text" class="form-control" name="unity" id="unity"  [(ngModel)]="unity" [placeholder]="item.unit" required>
+                </div>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-success" (click)="modal.close('Save click');firefirst(item.name)">Ajouter</button>
+            </div>
+            </form>
+          </ng-template>
+        </div>
+      </div>
+
+
+    </div>
+    <div class="col-md-4">
+      <div class="card ">
+        <div class="card-header">
+          <h4>Panier <span class="fas fa-shopping-cart"></span></h4>
+        </div>
+        <div class="card-body">
+          <p *ngIf="orderLines.length<=0">
+            Votre panier est vide
+          </p>
+
+          <div *ngFor="let order of orderLines">
+            <span class="text-center bolder-me">{{order.custom_name}} </span><br>
+            Quantité: {{order.qty}} / Prix Unitaire : {{order.price}}
+          <hr>
+          </div>
+        </div>
+        <div *ngIf="orderLines.length>0" class="card-footer">
+          <p class="bolder-me">
+            Total : {{prixTotal}} <button class="btn btn-success float-right" (click)="open(content1)">Valider</button>
+          </p>
+        </div>
       </div>
     </div>
   </div>
 
-  <ng-template #content let-modal>
-    <div class="modal-body">
-      <form class="row">
-        <div class="form-group col-md-12">
-          <label for="qte">Quantité</label>
-          <input type="number" class="form-control" id="qte"  placeholder="Saisir la quantité">
+  <ng-template #content1 let-modal>
+      <div class="modal-header">
+        <h4>Check-Out</h4>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <label for="method">Methode de paiement</label>
+          <select class="form-control" id="method">
+            <option>cheque</option>
+            <option>cash</option>
+          </select>
         </div>
-        <div class="form-group col-md-6">
-          <label for="prix">Prix</label>
-          <input type="number" class="form-control" id="prix"  placeholder="Saisir le prix">
+        <div class="form-group">
+          <label for="stock">Choisir le Stock</label>
+          <select class="form-control" id="stock" >
+            <option *ngFor="let stock of stocks" [value]="stock.uuid">{{stock.name}}</option>
+          </select>
         </div>
-        <div class="form-group col-md-6">
-          <label for="unity">Unité</label>
-          <input type="number" class="form-control" id="unity"  placeholder="Saisir l'unité de mesure">
+        <div class="form-group">
+          <label for="compte">Choisir le Compte</label>
+          <select class="form-control" id="compte">
+            <option *ngFor="let account of accounts" [value]="account.uuid">{{account.name}}</option>
+          </select>
         </div>
-      </form>
-    </div>
-    <div class="modal-footer">
-      <button type="button" class="btn btn-success" (click)="modal.close('Save click')">Ajouter</button>
-    </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-success" (click)="modal.close('Save click');firefirst(item.name)">Ajouter</button>
+      </div>
   </ng-template>
-
-
-
 
 </div>
