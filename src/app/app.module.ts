@@ -20,6 +20,10 @@ import {CategoriesService} from './services/categories.service';
 import {ItemsService} from './services/items.service';
 import {StocksService} from './services/stocks.service';
 import {OrdersService} from './services/orders.service';
+import { LoginComponent } from './login/login/login.component';
+import {AuthServiceService} from './services/auth-service.service';
+import {AuthGuardService} from './services/auth-guard.service';
+import { DashboardComponent } from './smart-stock/dashboard/dashboard.component';
 
 @NgModule({
   declarations: [
@@ -31,6 +35,8 @@ import {OrdersService} from './services/orders.service';
     ListsAccountComponent,
     ListOrdersComponent,
     NewOrderComponent,
+    LoginComponent,
+    DashboardComponent,
   ],
   imports: [
     BrowserModule,
@@ -45,7 +51,9 @@ import {OrdersService} from './services/orders.service';
     CategoriesService,
     ItemsService,
     StocksService,
-    OrdersService
+    OrdersService,
+    AuthServiceService,
+    AuthGuardService
   ],
   bootstrap: [
     AppComponent,

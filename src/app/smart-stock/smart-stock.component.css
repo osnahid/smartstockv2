@@ -1,35 +1,3 @@
-.side-nav{
-  width: 245px;
-  height: 100%;
-  position: fixed;
-  top: 0;
-  left: 0;
-  background-color: #0D1A27;
-  color: #909AAE;
-  font-weight: 600;
-
-}
-
-.inside-content{
-  padding-left: 245px;
-  border-top-left-radius: 20px;
-}
-
-.subs {
-  background: #203349;
-  color: #17A2F2;
-  font-size: 15px;
-  padding-left: 32px;
-  text-decoration: none;
-  text-decoration-style: -moz-none;
-}
-
-.top-bar{
-  background: #0D1A27;
-  margin-bottom: -50px;
-  height: 100px;
-  width: 100%;
-}
 
 .cursor-pointer{
   cursor: pointer;
@@ -42,6 +10,3 @@
   padding-top: 15px;
 }
 
-li {
-  background: transparent;
-}

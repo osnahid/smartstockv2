@@ -4,6 +4,9 @@ import {ItemsService} from '../../../services/items.service';
 import {NgbModal, ModalDismissReasons} from '@ng-bootstrap/ng-bootstrap';
 import {StocksService} from '../../../services/stocks.service';
 import {AccountsService} from '../../../services/accounts.service';
+import {Route, Router} from '@angular/router';
+import { ActivatedRoute,NavigationEnd } from '@angular/router'
+import {filter} from 'rxjs/operators';
 
 @Component({
   selector: 'app-new-order',
@@ -11,23 +14,30 @@ import {AccountsService} from '../../../services/accounts.service';
   styleUrls: ['./new-order.component.css']
 })
 export class NewOrderComponent implements OnInit {
+  orderLines=[];
+  orderType='';
+  paymentMethod= 'cash';
+  storageCard=[];
+  montant;
+  selectedAccount;
+
   closeResult: string;
   lineItems = [{
     'stock':'',
-    'order_type':'',
-    'account': '',
-    'payment_method' :'',
-    'order_lines': []
+    'order_type': this.orderType,
+    'account': this.selectedAccount,
+    'montant': this.montant,
+    'payment_method' :this.paymentMethod,
+    'order_lines': this.orderLines
   }];
-  categories;
-  items;
+  categories:any=[];
+  items:any=[];
   prixTotal=0;
   customName;
   qte;
-  accounts;
-  price;
+  accounts=[];
+  price=null;
   unity='kg';
-  orderLines=[];
   singleItem = {
     item:{
       'custom_name':'',
@@ -37,43 +47,87 @@ export class NewOrderComponent implements OnInit {
     }
   };
   stocks;
-
-  constructor(private categorie:CategoriesService ,private account:AccountsService ,private item:ItemsService , private stock:StocksService ,private modalService: NgbModal) { }
+  constructor(
+        private categorie:CategoriesService ,
+        private account:AccountsService ,
+        private item:ItemsService ,
+        private stock:StocksService ,
+        private modalService: NgbModal,
+        private route: ActivatedRoute,
+        private router: Router
+  )
+  {
+    this.router.events.pipe(filter(response => response instanceof NavigationEnd)).subscribe(
+      response =>{
+        this.accounts = [];
+        if(response instanceof NavigationEnd)
+          this.route.params.subscribe(params => {
+            this.orderType = params['type'];
+          });
+        this.account.getAccounts().subscribe(
+          (resp:any)=> {
+            this.accounts = [];
+            if (this.orderType == 'vente'){
+              for (let i=0; i<resp.length;i++) {
+                if (resp[i].type == 'client')
+                  this.accounts.push(resp[i]);
+              }
+            }else{
+              for (let i=0; i<resp.length;i++) {
+                if (resp[i].type == 'fournisseur')
+                  this.accounts.push(resp[i]);
+              }
+            }
+          }
+        );
+      }
+    );
+  }
 
   ngOnInit() {
+    this.orderLines =  JSON.parse(localStorage.getItem("OrderLines"));
+    if(JSON.parse(localStorage.getItem("OrderLines")) == null )
+      this.storageCard = [];
+    else{
+      this.storageCard = JSON.parse(localStorage.getItem("OrderLines"));
+      this.calculatePrice();
+    }
+    this.route.params.subscribe(params => {
+     this.orderType = params['type'];
+    });
+   console.log(this.orderType);
     this.categorie.getCategories().subscribe(
       (resp:any)=>{
         this.categories = resp.categories;
+        this.getItemsByCategorie(this.categories[0].uuid);
       });
     this.stock.getStocks().subscribe(
       (resp:any)=> {
         this.stocks = resp.stocks;
       });
-    this.account.getAccounts().subscribe(
-      (resp:any)=> {
-        this.accounts = resp;
-        console.log(this.accounts);
-      }
-    );
+  }
 
+  calculatePrice(){
+    this.prixTotal = 0;
+    for (let i=0 ;i<this.storageCard.length;i++){
+      this.prixTotal += this.storageCard[i].item.qty*this.storageCard[i].item.price;
+    }
   }
 
   getItemsByCategorie(uuid){
     this.item.getItems(uuid).subscribe(
       (resp: any) => {
         this.items = resp.items ;
-        console.log(this.items);
       }
     );
   }
 
-  open(content) {
+  open(content){
     this.modalService.open(content, {ariaLabelledBy: 'modal-basic-title'}).result.then((result) => {
       this.closeResult = `Closed with: ${result}`;
     }, (reason) => {
       this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
     });
-
   }
 
   private getDismissReason(reason: any): string {
@@ -91,17 +145,42 @@ export class NewOrderComponent implements OnInit {
     this.singleItem.item.qty = this.qte;
     this.singleItem.item.unit = this.unity;
     this.singleItem.item.custom_name = name;
-    this.orderLines.push({price:this.price,qty:this.qte,unit:this.unity,custom_name:name});
+    this.orderLines.push({item :{price:this.price,qty:this.qte,unit:this.unity,custom_name:name}});
     console.log(this.orderLines);
-    this.price = '';
+    this.price = null;
     this.qte = '';
     for (let i=0; i< this.orderLines.length;i++){
-      this.prixTotal += (this.orderLines[i].price*this.orderLines[i].qty);
+      this.prixTotal += (this.orderLines[i].item.price*this.orderLines[i].item.qty);
     }
 
   }
 
+  deleteItem(index){
+    console.log(index);
+    this.orderLines.splice(index,1);
+    console.log(this.orderLines);
+    localStorage.setItem('OrderLines', JSON.stringify(this.orderLines));
+    this.storageCard = JSON.parse(localStorage.getItem("OrderLines"));
+    this.calculatePrice();
 
+  }
 
+  testStore(){
+    localStorage.setItem('OrderLines', JSON.stringify(this.orderLines));
+    this.storageCard = JSON.parse(localStorage.getItem("OrderLines"));
+    this.calculatePrice();
+  }
+
+  showData(){
+    this.lineItems = [{
+      'stock':'',
+      'order_type': this.orderType,
+      'account': this.selectedAccount,
+      'montant': this.montant,
+      'payment_method' :this.paymentMethod,
+      'order_lines': this.storageCard
+    }];
+    console.log(this.lineItems);
+  }
 
 }

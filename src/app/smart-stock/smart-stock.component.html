@@ -1,32 +1,138 @@
-<div class="side-nav">
-  <div class="logo">
-    <h4>Smart Stock</h4>
-  </div>
-  <ul class="list-group list-group-flush cursor-pointer ">
-    <li class="list-group-item" (click)="isCollapsedUser = !isCollapsedUser" [attr.aria-expanded]="!isCollapsed" aria-controls="users">Utilisateurs <span class="float-right">&#x294C;</span></li>
-    <div id="users" [ngbCollapse]="isCollapsedUser" >
-      <a [routerLink]="['/dashboard/newAccount']" >
-        <li class="list-group-item subs" >Ajouter un utilisateur </li>
-      </a>
-      <a [routerLink]="['/dashboard/listAccounts']" >
-        <li class="list-group-item subs">Liste des utilisateurs</li>
-      </a>
-    </div>
-    <li class="list-group-item" (click)="isCollapsedOrder = !isCollapsedOrder" [attr.aria-expanded]="!isCollapsed" aria-controls="orders">Commandes <span class="float-right">&#x294C;</span></li>
-    <div id="orders" [ngbCollapse]="isCollapsedOrder">
-      <a [routerLink]="['/dashboard/newOrder']" >
-        <li class="list-group-item subs" >Nouvelle commande</li>
-      </a>
-      <a [routerLink]="['/dashboard/listOrders']" >
-        <li class="list-group-item subs">Liste des commandes</li>
-      </a>
-    </div>
 
-  </ul>
-</div>
-<div class="top-bar"></div>
-<div class="inside-content">
-  <div class="container-fluid">
-    <router-outlet></router-outlet>
+<div class="wrapper">
+  <div class="main-header" >
+    <div class="logo-header" data-background-color="dark">
+
+      <a  class="logo text-white">
+        <h5 >Smart Stock App</h5>
+      </a>
+      <button class="navbar-toggler sidenav-toggler ml-auto" type="button" data-toggle="collapse" data-target="collapse" aria-expanded="false" aria-label="Toggle navigation">
+					<span class="navbar-toggler-icon">
+						<i class="icon-menu"></i>
+					</span>
+      </button>
+      <button class="topbar-toggler more"><i class="icon-options-vertical"></i></button>
+      <div class="nav-toggle">
+        <button class="btn btn-toggle toggle-sidebar">
+          <i class="icon-menu"></i>
+        </button>
+      </div>
+    </div>
+    <!-- End Logo Header -->
+    <nav class="navbar navbar-header navbar-expand-lg" data-background-color="dark2">
+      <div class="container-fluid">
+        <div class="collapse" id="search-nav">
+          <form class="navbar-left navbar-form nav-search mr-md-3">
+            <h4></h4>
+          </form>
+        </div>
+      </div>
+    </nav>
+
+    <!--Side bar starts here -->
+    <div class="sidebar sidebar-style-2" data-background-color="dark2">
+      <div class="sidebar-wrapper scrollbar scrollbar-inner">
+        <div class="sidebar-content">
+          <div class="user">
+            <div class="avatar-sm float-left mr-2">
+              <img src="assets/img/profile.jpg" alt="..." class="avatar-img rounded-circle">
+            </div>
+            <div class="info">
+              <a data-toggle="collapse" href="#collapseExample" aria-expanded="true">
+								<span>
+									Hizrian
+									<span class="user-level">Administrator</span>
+									<span class="caret"></span>
+								</span>
+              </a>
+              <div class="clearfix"></div>
+
+              <div class="collapse in" id="collapseExample">
+                <ul class="nav">
+                  <li>
+                    <a href="#profile">
+                      <span class="link-collapse">My Profile</span>
+                    </a>
+                  </li>
+                  <li>
+                    <a href="#edit">
+                      <span class="link-collapse">Edit Profile</span>
+                    </a>
+                  </li>
+                  <li>
+                    <a href="#settings">
+                      <span class="link-collapse">Settings</span>
+                    </a>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+          <ul class="nav nav-info">
+            <li class="nav-item " routerLinkActive="active" [routerLinkActiveOptions]="{exact : true}">
+              <a [routerLink]="['/dashboard']">
+                <i class="fas fa-home"></i>
+                <p>Dashboard</p>
+              </a>
+            </li>
+            <li class="nav-item " routerLinkActive="active" [routerLinkActiveOptions]="{exact : true}" (click)="isCollapsedUser = !isCollapsedUser" [attr.aria-expanded]="!isCollapsed">
+              <a data-toggle="collapse" href="#utilisateur" class="collapsed" aria-expanded="false">
+                <i class="fas fa-users"></i>
+                <p>Utilisateurs</p>
+                <span class="caret"></span>
+              </a>
+              <div class="collapse" id="utilisateur">
+                <ul class="nav nav-collapse">
+                  <li>
+                    <a [routerLink]="['/dashboard/listAccounts']">
+                      <span class="sub-item">Liste des comptes</span>
+                    </a>
+                  </li>
+                  <li>
+                    <a [routerLink]="['/dashboard/newAccount']">
+                      <span class="sub-item">Nouveau compte</span>
+                    </a>
+                  </li>
+                </ul>
+              </div>
+            </li>
+            <li class="nav-item " routerLinkActive="active" [routerLinkActiveOptions]="{exact : true}"  (click)="isCollapsedUser = !isCollapsedUser" [attr.aria-expanded]="!isCollapsed">
+              <a data-toggle="collapse" href="#orders" class="collapsed" aria-expanded="false">
+                <i class="fas fa-list-ol"></i>
+                <p>Commandes</p>
+                <span class="caret"></span>
+              </a>
+              <div class="collapse" id="orders">
+                <ul class="nav nav-collapse">
+                  <li>
+                    <a [routerLink]="['/dashboard/newOrder','achat']">
+                      <span class="sub-item">Nouvel achat</span>
+                    </a>
+                  </li>
+                  <li>
+                    <a [routerLink]="['/dashboard/newOrder','vente']">
+                      <span class="sub-item">Nouvelle vente</span>
+                    </a>
+                  </li>
+                  <li>
+                    <a [routerLink]="['/dashboard/listOrders']">
+                      <span class="sub-item">Liste des commandes</span>
+                    </a>
+                  </li>
+                </ul>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </div>
+  </div>
+  <!-- Logo Header -->
+  </div>
+  <div class="main-panel">
+    <div class="content">
+      <router-outlet></router-outlet>
+    </div>
   </div>
 </div>
+
+

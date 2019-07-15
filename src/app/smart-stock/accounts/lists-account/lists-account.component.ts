@@ -9,7 +9,7 @@ import Swal from 'sweetalert2'
   styleUrls: ['./lists-account.component.css']
 })
 export class ListsAccountComponent implements OnInit {
-  accounts;
+  accounts:any=[];
 
   constructor(private http: HttpClient,private account:AccountsService) { }
 

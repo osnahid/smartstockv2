@@ -1,79 +1,108 @@
-<div class="section-title">
-  <h4> Nouvelle Commande</h4>
+
+<div class="panel-header bg-primary-gradient">
+  <div class="page-inner py-5">
+    <div class="d-flex align-items-left align-items-md-center flex-column flex-md-row">
+      <div>
+        <h3 class="text-white pb-2 fw-bold">Nouvelle {{orderType}}</h3>
+      </div>
+    </div>
+  </div>
 </div>
+<br>
 <div class="container">
   <div class="row">
     <div class="col-md-8">
       <div class="row" *ngFor="let categorie of categories">
-        <div class="card bg-warning" style="width: 18rem;">
-          <div class="card-body">
-            <h5 class="card-title text-center bolder-me ">{{categorie.name}}</h5>
-            <div class="text-center">
-              <a class="btn btn-primary text-white" (click)="getItemsByCategorie(categorie.uuid)">Voir les produits</a>
-            </div>
-          </div>
-        </div>
+        <ul class="nav nav-line nav-color-dark">
+          <li class="nav-item">
+            <a class="nav-link active cursor-pointer" (click)="getItemsByCategorie(categorie.uuid)">{{categorie.name}}</a>
+          </li>
+        </ul>
       </div>
       <br>
       <div class="row">
-        <div  *ngFor="let item of items" (click)="open(content)"  class="card bg-info col-md-3 cursor-pointer" style="margin: 5px">
-          <div class="card-body ">
-            <p class="card-title text-center text-white bolder-me " >{{item.name}}</p>
+        <div  *ngFor="let item of items"   class=" col-md-4" >
+          <div class="card " >
+            <img class="card-img-top" src="assets/img/bg-abstract2.png" alt="Card image cap">
+            <div class="card-body text-center">
+              <h6 class="card-text"> <b>{{item.name}} / {{item.alternate_name}}</b></h6>
+            </div>
+            <div class="card-footer">
+              <button class="btn btn-dark btn-block btn-round" (click)="open(content)">Ajouter</button>
+            </div>
           </div>
           <ng-template #content let-modal>
-            <form >
             <div class="modal-body">
               <div class="row">
                 <div class="form-group col-md-12">
                   <label for="qte">Quantité</label>
-                  <input type="number" class="form-control" name="qte" id="qte" [(ngModel)]="qte" placeholder="Saisir la quantité" required>
+                  <input type="number" min="0" class="form-control" name="qte" id="qte" [(ngModel)]="qte" placeholder="Saisir la quantité" required>
                 </div>
                 <div class="form-group col-md-6">
                   <label for="prix">Prix</label>
-                  <input type="number" class="form-control" name="'prix" id="prix"  [(ngModel)]="price" placeholder="Saisir le prix"  required>
+                  <input type="number" min="0" class="form-control" name="prix" id="prix" [attr.value]="price == null ? item.buy_price : price"   [(ngModel)]="price" placeholder="Saisir le prix"  required>
                   <span>Prix par Default : {{item.buy_price}} </span>
                 </div>
                 <div class="form-group col-md-6">
-                  <label for="unity">Unité</label>
-                  <input type="text" class="form-control" name="unity" id="unity"  [(ngModel)]="unity" [placeholder]="item.unit" required>
+                  <label >Unité</label>
+                  <select class="form-control">
+                    <option [value]="item.unit">{{item.unit}}</option>
+                    <option value="ton">ton</option>
+                  </select>
                 </div>
               </div>
             </div>
             <div class="modal-footer">
-              <button type="button" class="btn btn-success" (click)="modal.close('Save click');firefirst(item.name)">Ajouter</button>
+              <button type="button" *ngIf="qte"  name="addingOne" class="btn btn-success"  (click)="modal.close('Save');firefirst(item.name);testStore()">Ajouter</button>
             </div>
-            </form>
           </ng-template>
         </div>
       </div>
-
-
     </div>
     <div class="col-md-4">
-      <div class="card ">
-        <div class="card-header">
-          <h4>Panier <span class="fas fa-shopping-cart"></span></h4>
+      <br><br><br><br>
+      <div class="card bg-info-gradient">
+        <div class="card-header text-white">
+          <h4>Panier <span class="fas fa-shopping-cart float-right"></span></h4>
         </div>
-        <div class="card-body">
-          <p *ngIf="orderLines.length<=0">
+        <div class="card-body bubble-shadow">
+          <p *ngIf="storageCard.length<=0">
             Votre panier est vide
           </p>
-
-          <div *ngFor="let order of orderLines">
-            <span class="text-center bolder-me">{{order.custom_name}} </span><br>
-            Quantité: {{order.qty}} / Prix Unitaire : {{order.price}}
-          <hr>
+          <div class="card p-3 " *ngFor="let order of storageCard;let i=index">
+            <div class="align-right">
+              <i class="fa fa-times text-danger cursor-pointer" (click)="deleteItem(i)"></i>
+            </div>
+            <div class="d-flex align-items-center">
+									<span class="stamp stamp-md bg-success mr-4">
+										<i class="fa fa-shopping-cart"></i>
+									</span>
+              <div>
+                <h5 class="mb-1"><b>{{order.item.custom_name}}</b></h5>
+                <small class="text-muted">Quantité: {{order.item.qty}}</small>
+                / <small class="text-muted">Prix Unitaire : {{order.item.price}}</small>
+              </div>
+            </div>
           </div>
         </div>
-        <div *ngIf="orderLines.length>0" class="card-footer">
-          <p class="bolder-me">
-            Total : {{prixTotal}} <button class="btn btn-success float-right" (click)="open(content1)">Valider</button>
-          </p>
+        <div *ngIf="storageCard.length>0" class="card-footer text-white">
+          <div class="text-center">
+            <h5 class="bolder-me">
+              <span class="float-left"><b>Total</b></span> <span class="float-right">{{prixTotal}}</span>
+            </h5>
+          </div>
+          <div class="clearfix"></div>
+          <div>
+            <br>
+            <button class="btn btn-dark btn-block" (click)="open(content1)">Check-Out</button>
+          </div>
         </div>
       </div>
     </div>
+    <div class="col-md-8  text-center">
+      <p class="is-loading is-loading-lg" *ngIf="categories.length<=0 || items.length<=0"></p>
+    </div>
   </div>
-
   <ng-template #content1 let-modal>
       <div class="modal-header">
         <h4>Check-Out</h4>
@@ -81,26 +110,26 @@
       <div class="modal-body">
         <div class="form-group">
           <label for="method">Methode de paiement</label>
-          <select class="form-control" id="method">
-            <option>cheque</option>
-            <option>cash</option>
+          <select class="form-control" id="method" [(ngModel)]="paymentMethod">
+            <option value="cash">cash</option>
+            <option value="cheque">cheque</option>
           </select>
         </div>
-        <div class="form-group">
-          <label for="stock">Choisir le Stock</label>
-          <select class="form-control" id="stock" >
-            <option *ngFor="let stock of stocks" [value]="stock.uuid">{{stock.name}}</option>
-          </select>
+        <div class="form-group col-md-12">
+          <label for="montant">Montant</label>
+          <input type="number" min="0" class="form-control" name="montant" id="montant" [(ngModel)]="montant" placeholder="Saisir le montant" required>
         </div>
         <div class="form-group">
           <label for="compte">Choisir le Compte</label>
-          <select class="form-control" id="compte">
+          <select class="form-control" id="compte" [(ngModel)]="selectedAccount">
             <option *ngFor="let account of accounts" [value]="account.uuid">{{account.name}}</option>
           </select>
+          <br>
+          <button class="btn btn-primary" (click)="modal.close('Save click')" [routerLink]="['/dashboard/newAccount']">Nouveau Compte</button>
         </div>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-success" (click)="modal.close('Save click');firefirst(item.name)">Ajouter</button>
+        <button type="button" class="btn btn-success" (click)="modal.close('Save click');showData()">Valider</button>
       </div>
   </ng-template>
 
