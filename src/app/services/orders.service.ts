@@ -18,4 +18,10 @@ export class OrdersService {
   newOrder(object){
     return this.http.post(this.api_url,JSON.stringify(object),{ headers: this.headers })
   }
+
+
+  getOrderDetails(uuid){
+    return this.http.get(this.api_url + "/" + uuid , { headers: this.headers });
+
+  }
 }

@@ -7,6 +7,7 @@ import {AccountsService} from '../../../services/accounts.service';
 import {Route, Router} from '@angular/router';
 import { ActivatedRoute,NavigationEnd } from '@angular/router'
 import {filter} from 'rxjs/operators';
+import {OrdersService} from '../../../services/orders.service';
 
 @Component({
   selector: 'app-new-order',
@@ -18,18 +19,12 @@ export class NewOrderComponent implements OnInit {
   orderType='';
   paymentMethod= 'cash';
   storageCard=[];
-  montant;
+  montant=0;
   selectedAccount;
+  orderNames=[];
 
   closeResult: string;
-  lineItems = [{
-    'stock':'',
-    'order_type': this.orderType,
-    'account': this.selectedAccount,
-    'montant': this.montant,
-    'payment_method' :this.paymentMethod,
-    'order_lines': this.orderLines
-  }];
+  lineItems:any;
   categories:any=[];
   items:any=[];
   prixTotal=0;
@@ -40,17 +35,17 @@ export class NewOrderComponent implements OnInit {
   unity='kg';
   singleItem = {
     item:{
-      'custom_name':'',
-      'qty': 0,
+      'uuid':'',
       'price': 0,
-      'unit': ''
-    }
+    },
+    qty : 0
   };
   stocks;
   constructor(
         private categorie:CategoriesService ,
         private account:AccountsService ,
         private item:ItemsService ,
+        private order:OrdersService,
         private stock:StocksService ,
         private modalService: NgbModal,
         private route: ActivatedRoute,
@@ -86,10 +81,16 @@ export class NewOrderComponent implements OnInit {
 
   ngOnInit() {
     this.orderLines =  JSON.parse(localStorage.getItem("OrderLines"));
-    if(JSON.parse(localStorage.getItem("OrderLines")) == null )
+    this.orderNames =  JSON.parse(localStorage.getItem("OrderNames"));
+
+    if(JSON.parse(localStorage.getItem("OrderLines")) == null ){
       this.storageCard = [];
+      this.orderLines = [];
+      this.orderNames = []
+    }
     else{
       this.storageCard = JSON.parse(localStorage.getItem("OrderLines"));
+      this.orderNames = JSON.parse(localStorage.getItem("OrderNames"));
       this.calculatePrice();
     }
     this.route.params.subscribe(params => {
@@ -110,7 +111,7 @@ export class NewOrderComponent implements OnInit {
   calculatePrice(){
     this.prixTotal = 0;
     for (let i=0 ;i<this.storageCard.length;i++){
-      this.prixTotal += this.storageCard[i].item.qty*this.storageCard[i].item.price;
+      this.prixTotal += this.storageCard[i].qty*this.storageCard[i].item.price;
     }
   }
 
@@ -140,17 +141,16 @@ export class NewOrderComponent implements OnInit {
     }
   }
 
-  firefirst(name){
-    this.singleItem.item.price = this.price;
-    this.singleItem.item.qty = this.qte;
-    this.singleItem.item.unit = this.unity;
-    this.singleItem.item.custom_name = name;
-    this.orderLines.push({item :{price:this.price,qty:this.qte,unit:this.unity,custom_name:name}});
-    console.log(this.orderLines);
+  firefirst(name,uuid,defaultPrice){
+    if (this.price == null)
+      this.orderLines.push({item:{"price":defaultPrice,"id":uuid},qty:this.qte});
+    else
+     this.orderLines.push({item:{"price":this.price,"id":uuid},qty:this.qte});
+     this.orderNames.push({name:name});
     this.price = null;
     this.qte = '';
     for (let i=0; i< this.orderLines.length;i++){
-      this.prixTotal += (this.orderLines[i].item.price*this.orderLines[i].item.qty);
+      this.prixTotal += (this.orderLines[i].item.price*this.orderLines[i].qty);
     }
 
   }
@@ -158,8 +158,11 @@ export class NewOrderComponent implements OnInit {
   deleteItem(index){
     console.log(index);
     this.orderLines.splice(index,1);
+    this.orderNames.splice(index,1);
     console.log(this.orderLines);
     localStorage.setItem('OrderLines', JSON.stringify(this.orderLines));
+    localStorage.setItem('OrderNames', JSON.stringify(this.orderNames));
+
     this.storageCard = JSON.parse(localStorage.getItem("OrderLines"));
     this.calculatePrice();
 
@@ -168,19 +171,51 @@ export class NewOrderComponent implements OnInit {
   testStore(){
     localStorage.setItem('OrderLines', JSON.stringify(this.orderLines));
     this.storageCard = JSON.parse(localStorage.getItem("OrderLines"));
+    localStorage.setItem('OrderNames', JSON.stringify(this.orderNames));
+     this.orderNames = JSON.parse(localStorage.getItem("OrderNames"));
     this.calculatePrice();
   }
 
   showData(){
-    this.lineItems = [{
+    const temp = {
       'stock':'',
       'order_type': this.orderType,
       'account': this.selectedAccount,
-      'montant': this.montant,
       'payment_method' :this.paymentMethod,
       'order_lines': this.storageCard
-    }];
+    };
+    const temp2 ={
+      'stock':'',
+      'order_type': this.orderType,
+      'account': this.selectedAccount,
+      'payment_method' :this.paymentMethod,
+      'order_lines': this.storageCard,
+      'payments': [
+        {
+          "amount":this.montant,
+          "method":"cash",
+          "status":"APPROVED"
+        }
+      ]
+    };
+    this.lineItems = temp;
+    if(this.montant != 0){
+      this.lineItems = temp2;
+    }
+
     console.log(this.lineItems);
+    this.order.newOrder(this.lineItems).subscribe(
+      resp => {
+        this.orderLines = [];
+        this.orderNames = [];
+        this.router.navigate(['/dashboard']);
+      }
+    );
+  }
+
+  priceChange(e,defaultPrice){
+    if (!e)
+      this.price = defaultPrice;
   }
 
 }

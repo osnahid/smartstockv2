@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import {OrdersService} from '../../../services/orders.service';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+
 
 @Component({
   selector: 'app-list-orders',
@@ -8,7 +10,19 @@ import {OrdersService} from '../../../services/orders.service';
 })
 export class ListOrdersComponent implements OnInit {
   orders=[];
-  constructor(private order:OrdersService) { }
+  closeResult: string;
+  ordersDetails =[];
+  config: any;
+
+
+  constructor(private order:OrdersService,private modalService: NgbModal) {
+    this.config = {
+      itemsPerPage: 6,
+      currentPage: 1,
+      totalItems: this.orders.length
+    };
+
+  }
 
   ngOnInit() {
     this.order.getOrders().subscribe(
@@ -18,5 +32,22 @@ export class ListOrdersComponent implements OnInit {
     }
     );
   }
+
+  openLg(content) {
+    this.modalService.open(content, { size: 'lg' });
+  }
+
+  getOrderDetailsFromService(uuid){
+    this.ordersDetails =[];
+    this.order.getOrderDetails(uuid).subscribe(
+      (resp:any) => {
+        this.ordersDetails = resp.order_lines;
+        console.log(this.ordersDetails);
+      }
+
+    );
+
+  }
+
 
 }

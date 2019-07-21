@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {AccountsService} from '../../../services/accounts.service';
 import Swal from 'sweetalert2'
+import {filter} from 'rxjs/operators';
+import {ActivatedRoute, NavigationEnd, Router} from '@angular/router';
 
 @Component({
   selector: 'app-lists-account',
@@ -9,17 +11,56 @@ import Swal from 'sweetalert2'
   styleUrls: ['./lists-account.component.css']
 })
 export class ListsAccountComponent implements OnInit {
+  config:any;
   accounts:any=[];
+  orderType='';
 
-  constructor(private http: HttpClient,private account:AccountsService) { }
+  constructor(
+    private http: HttpClient,
+    private account:AccountsService,
+    private route: ActivatedRoute,
+    private router: Router
+  )
+  {
+    this.config = {
+      itemsPerPage: 6,
+      currentPage: 1,
+      totalItems: this.accounts.length
+    };
+    this.router.events.pipe(filter(response => response instanceof NavigationEnd)).subscribe(
+      response =>{
+        this.accounts = [];
+        if(response instanceof NavigationEnd)
+          this.route.params.subscribe(params => {
+            this.orderType = params['type'];
+          });
+        this.account.getAccounts().subscribe(
+          (resp:any)=> {
+            this.accounts = [];
+            if (this.orderType == 'client'){
+              for (let i=0; i<resp.length;i++) {
+                if (resp[i].type == 'client')
+                  this.accounts.push(resp[i]);
+              }
+            }else{
+              for (let i=0; i<resp.length;i++) {
+                if (resp[i].type == 'fournisseur')
+                  this.accounts.push(resp[i]);
+              }
+            }
+          }
+        );
+      }
+    );
+  }
 
   ngOnInit() {
 
-    this.account.getAccounts().subscribe(
-      resp => {
-        this.accounts = resp ;
-      }
-    );
+    // this.account.getAccounts().subscribe(
+    //   resp => {
+    //     this.accounts = resp ;
+    //   }
+    // );
   }
 
   deleteSingleAccount(id){

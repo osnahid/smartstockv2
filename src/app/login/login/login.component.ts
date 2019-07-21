@@ -18,7 +18,7 @@ export class LoginComponent implements OnInit {
 
 
   login(){
-    this.auth.logMe(this.email,this.password);
+    console.log(this.auth.logMe(this.email,this.password));
 
   }
 }

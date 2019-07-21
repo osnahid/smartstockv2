@@ -24,6 +24,8 @@ import { LoginComponent } from './login/login/login.component';
 import {AuthServiceService} from './services/auth-service.service';
 import {AuthGuardService} from './services/auth-guard.service';
 import { DashboardComponent } from './smart-stock/dashboard/dashboard.component';
+import {NgxPaginationModule} from 'ngx-pagination';
+
 
 @NgModule({
   declarations: [
@@ -44,6 +46,7 @@ import { DashboardComponent } from './smart-stock/dashboard/dashboard.component'
     NgbModule,
     FormsModule,
     HttpClientModule,
+    NgxPaginationModule,
     SweetAlert2Module.forRoot()
   ],
   providers: [

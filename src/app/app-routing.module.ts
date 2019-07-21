@@ -27,7 +27,7 @@ const routes: Routes = [
           path: 'newAccount' , component: NewAccountComponent
          },
         {
-          path: 'listAccounts' , component: ListsAccountComponent
+          path: 'listAccounts/:type' , component: ListsAccountComponent
         },
         {
           path: 'newOrder/:type' , component: NewOrderComponent
